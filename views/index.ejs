@@ -1,0 +1,31 @@
+<script src="/javascripts/jquery.min.js"></script>
+<p id="demo1">Click this!:</p>
+<button onclick="getLocation_cord()">Geolocation</button>
+<script>
+var x1=document.getElementById("demo1");
+function getLocation_cord() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else{
+        x1.innerHTML="Geolocation is not supported by this browser.";
+    }
+}
+function showPosition(position) {
+    $.ajax({
+        url: '/geo',
+        type: 'PUT',
+        data: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        },
+        success: function(msg) {
+            x1.innerHTML = "오늘 " + msg.hour + "시의 일기예보는 다음과 같습니다.\n" +
+                            "섭씨 " + msg.temp + "℃, " + msg.wfKor + ", 풍향은 " + msg.wdKor + "풍 입니다.";
+            console.log(msg);
+        },
+        error: function(data) {
+            console.log(data);
+        }
+    });
+}
+</script>
